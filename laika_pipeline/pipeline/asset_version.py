@@ -6,10 +6,21 @@ class AssetVersion():
     A class representing an asset version in the pipeline
     """
 
-    def __init__(self, asset: str,
+    def __init__(self,
+                 asset: str,
                  department: str,
                  version: int,
                  status: str | Status = Status.ACTIVE):
+        """
+        Initialize an AssetVersion instance.
+
+        Args:
+            asset (str): The code of the asset this version belongs to.
+            department (str): The department that created the asset version.
+            version (int): The version number of the asset (e.g., 1, 2, 3).
+            status (str | Status, optional): The status of the asset version.
+                                             Defaults to 'active'.
+        """
         self._asset = asset
         self._department = department
         self._version = version
