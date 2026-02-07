@@ -53,7 +53,7 @@ class Asset():
         return self._name
 
     @name.setter
-    def name(self, value):
+    def name(self, value: str):
         if not isinstance(value, str):
             raise TypeError("Asset name must be a string.")
         self._name = value
@@ -63,7 +63,7 @@ class Asset():
         return self._asset_type
 
     @asset_type.setter
-    def asset_type(self, value):
+    def asset_type(self, value: AssetType):
         if not isinstance(value, AssetType):
             raise TypeError("Asset type must be a valid AssetType.")
         self._asset_type = value
