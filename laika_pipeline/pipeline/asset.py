@@ -1,3 +1,5 @@
+from typing import Any
+
 from laika_pipeline.pipeline.asset_type import AssetType
 
 
@@ -14,6 +16,26 @@ class Asset():
         self._asset_type = asset_type
         # Generate a unique code for the asset based on its name and type
         self._code = self.generate_code(name, asset_type)
+
+    def __eq__(self, other: Any) -> bool:
+        """Check if Asset is equal to another Asset.
+        Args:
+            other: Another Asset instance to compare against.
+        Returns:
+            bool: True if both Assets have the same code,
+                  False otherwise.
+        """    
+        if isinstance(other, Asset):
+            return self.code == other.code
+        return False
+
+    def __repr__(self) -> str:
+        """Return a string representation of the Asset."""
+        return (
+            f"Asset(name='{self.name}', "
+            f"asset_type='{self.asset_type.value}', "
+            f"code='{self.code}')"
+        )
 
     @property
     def name(self):
