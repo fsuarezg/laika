@@ -1,6 +1,7 @@
 from typing import Any
 
 from laika_pipeline.pipeline.asset_type import AssetType
+from laika_pipeline.validation.operation_result import OperationResult
 
 
 class Asset():
@@ -10,7 +11,17 @@ class Asset():
 
     def __init__(self, name: str,
                  asset_type: str | AssetType):
-        self._name = name
+        """
+        Initialise an Asset instance.
+
+        Args:
+            name (str): The name of the asset
+            asset_type (str | AssetType): The type of the asset
+
+        Returns:
+            _type_: _description_
+        """
+        self._name = name.strip()
         if isinstance(asset_type, str):
             asset_type = AssetType.from_string(asset_type)
         self._asset_type = asset_type
@@ -24,7 +35,7 @@ class Asset():
         Returns:
             bool: True if both Assets have the same code,
                   False otherwise.
-        """    
+        """
         if isinstance(other, Asset):
             return self.code == other.code
         return False
@@ -60,6 +71,31 @@ class Asset():
     @property
     def code(self):
         return self._code
+
+    def validate(self) -> OperationResult:
+        """
+        Validate the asset's properties.
+
+        Returns:
+            OperationResult: An object indicating success or failure of
+                             validation, and an error message if validation
+                             fails.
+        """
+        if not self.name or not self.name.strip():
+            return OperationResult(
+                success=False,
+                error_message="Asset name must be a non-empty string"
+            )
+        if not isinstance(self.asset_type, AssetType):
+            valid = ", ".join([t.value for t in AssetType])
+            return OperationResult(
+                success=False,
+                error_message=(
+                    f"Invalid asset type '{self.asset_type}'."
+                    f"Must be one of: {valid}"
+                )
+            )
+        return OperationResult(success=True)
 
     def generate_code(self, name, asset_type):
         return f"{name.lower().replace(' ', '_')}_{asset_type.value}"

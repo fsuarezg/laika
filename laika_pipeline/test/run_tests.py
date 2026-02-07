@@ -11,6 +11,7 @@ def main(filepath: str = 'sample_data/asset_data.json'):
 
     pprint(project.assets)
     pprint(project.asset_versions)
+    pprint(project.validation_errors)
 
 
 # -----------------------------------------------------------------------------

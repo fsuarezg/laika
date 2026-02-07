@@ -2,6 +2,7 @@ from laika_pipeline.lib.load_json import load_json
 
 from laika_pipeline.pipeline.asset import Asset
 from laika_pipeline.pipeline.asset_version import AssetVersion
+from laika_pipeline.validation.operation_result import OperationResult
 
 
 class Project():
@@ -12,6 +13,7 @@ class Project():
         self._name = name
         self._assets = []
         self._asset_versions = []
+        self.validation_errors = []
 
     @property
     def name(self):
@@ -25,40 +27,84 @@ class Project():
     def asset_versions(self):
         return self._asset_versions
 
-    def load_assets(self, file_path: str):
+    def load_assets(
+            self,
+            file_path: str
+    ) -> None:
         data = load_json(file_path)
         for entry in data:
             asset_entry = entry['asset']
+            # TODO handle type not being in the enum
             asset = Asset(
                         name=asset_entry['name'],
                         asset_type=asset_entry['type']
                     )
-            self.add_asset(asset)
+            validation_result = self.add_asset(asset)
+            if not validation_result.success:
+                self.validation_errors.append(validation_result.error_message)
+            # TODO handle status not being in the enum
             asset_version = AssetVersion(
                         asset=asset.code,
                         department=entry['department'],
                         version=entry['version'],
                         status=entry['status']
                     )
-            self.add_asset_version(asset_version)
+            validation_result = self.add_asset_version(asset_version)
+            if not validation_result.success:
+                self.validation_errors.append(validation_result.error_message)
 
-    def add_asset(self, asset: Asset):
+    def add_asset(
+        self,
+        asset: Asset
+    ) -> OperationResult:
         if not isinstance(asset, Asset):
             raise TypeError("Asset must be an instance of Asset.")
+        valid_asset = asset.validate()
+        if valid_asset.success is False:
+            return valid_asset
         if asset in self.assets:
-            raise ValueError(f"Asset with code '{asset.code}' already exists in the project.")
-        self.assets.append(asset)
-
-    def add_asset_version(self, asset_version: AssetVersion):
-        if not isinstance(asset_version, AssetVersion):
-            raise TypeError("Asset version must be an instance of AssetVersion.")
-        if asset_version in self.asset_versions:
-            raise ValueError(
-                f"Asset version for asset '{asset_version.asset}' "
-                f"version '{asset_version.version}' already exists in the "
-                f"project."
+            return OperationResult(
+                success=False,
+                error_message=(
+                    f"Asset '{asset.name}' of type '{asset.asset_type}' "
+                    f"already exists"
+                )
             )
+
+        self.assets.append(asset)
+        return OperationResult(
+            success=True,
+            data={"asset_code": asset.code}
+        )
+
+    def add_asset_version(
+            self,
+            asset_version: AssetVersion
+    ) -> OperationResult:
+        if not isinstance(asset_version, AssetVersion):
+            raise TypeError(
+                "Asset version must be an instance of AssetVersion.")
+        valid_asset_version = asset_version.validate()
+        if valid_asset_version.success is False:
+            return valid_asset_version
+        if asset_version in self.asset_versions:
+            return OperationResult(
+                success=False,
+                error_message=(
+                    f"Asset version for asset '{asset_version.asset}' "
+                    f"version '{asset_version.version}' already exists in the "
+                    f"project."
+                )
+            )
+
         self.asset_versions.append(asset_version)
+        return OperationResult(
+            success=True,
+            data={
+                "asset_code": asset_version.asset,
+                "version": asset_version.version
+            }
+        )
 
     # # list all assets
     # list_assets()

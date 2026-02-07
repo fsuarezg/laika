@@ -1,6 +1,7 @@
 from typing import Any
 
 from laika_pipeline.pipeline.status import Status
+from laika_pipeline.validation.operation_result import OperationResult
 
 
 class AssetVersion():
@@ -101,3 +102,41 @@ class AssetVersion():
         if not isinstance(value, Status):
             raise TypeError("Status must be a valid Status.")
         self._status = value
+
+    def validate(self) -> OperationResult:
+        """ Validate the asset version's properties.
+
+        Returns:
+            OperationResult: An object indicating success or failure of
+                             validation, and an error message if validation
+                             fails.
+        """
+        if not self.asset or not self.asset.strip():
+            return OperationResult(
+                success=False,
+                error_message="Asset code must be a non-empty string"
+            )
+        if not self.department or not self.department.strip():
+            return OperationResult(
+                success=False,
+                error_message="Department must be a non-empty string"
+            )
+        if not isinstance(self.version, int):
+            return OperationResult(
+                success=False,
+                error_message="Version must be an integer"
+            )
+        if not self.version > 0:
+            return OperationResult(
+                success=False,
+                error_message="Version must be a positive integer"
+            )
+        if not isinstance(self.status, Status):
+            valid = ", ".join([s.value for s in Status])
+            return OperationResult(
+                success=False,
+                error_message=(
+                    f"Invalid status '{self.status}'. Must be one of: {valid}"
+                )
+            )
+        return OperationResult(success=True)
