@@ -1,0 +1,18 @@
+[project]
+name = "laika_pipeline"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Fernando Suarez Groen", email = "fernando_suarez_groen@outlook.com"}
+]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+]
+
+[tool.poetry.scripts]
+run_tests = "laika_pipeline.test.run_tests:main"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
