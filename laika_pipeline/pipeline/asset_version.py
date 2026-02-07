@@ -1,3 +1,5 @@
+from typing import Any
+
 from laika_pipeline.pipeline.status import Status
 
 
@@ -27,6 +29,34 @@ class AssetVersion():
         if isinstance(status, str):
             status = Status.from_string(status)
         self._status = status
+
+    def __eq__(self, other: Any) -> bool:
+        """
+        Check if AssetVersion is equal to another AssetVersion.
+
+        Args:
+            other: Another AssetVersion instance to compare against.
+
+        Returns:
+            bool: True if both AssetVersions have the same asset, department,
+                  version, False otherwise.
+        """
+        if isinstance(other, AssetVersion):
+            return (self.asset == other.asset and
+                    self.department == other.department and
+                    self.version == other.version)
+        return False
+
+    def __repr__(self) -> str:
+        """
+        Return a string representation of the AssetVersion.
+        """
+        return (
+            f"AssetVersion(asset_code='{self._asset}', "
+            f"department='{self.department}', "
+            f"version='{self.version}'), "
+            f"status='{self.status.value}')"
+        )
 
     @property
     def asset(self):
