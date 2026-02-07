@@ -115,7 +115,31 @@ class Project():
         return self.asset_versions
 
     # # retrieve asset by name
-    # get_asset(asset_name, type)
+    def get_asset(self, asset_name: str, asset_type: str) -> Asset | None:
+        """
+        Retrieve an asset from the project, if not found a validation error
+        is logged and None is returned.
+
+        Args:
+            asset_name (str): name of the asset
+            asset_type (str): type of the asset
+
+        Returns:
+            Asset | None: The retrieved asset or None if not found
+        """
+        for asset in self.assets:
+            if (asset.name == asset_name
+               and asset.asset_type.value == asset_type):
+                return asset
+        validation_result = OperationResult(
+            success=False,
+            error_message=(
+                f"Asset '{asset_name}' of type '{asset_type}' not found in "
+                f"project."
+            )
+        )
+        self.validation_errors.append(validation_result.error_message)
+        return None
 
     # # retrieve asset version by version number
     # get_asset_version(asset_name, type, version_num)
