@@ -140,3 +140,36 @@ class AssetVersion():
                 )
             )
         return OperationResult(success=True)
+
+    def to_dict(self) -> dict:
+        """
+        Convert the AssetVersion instance to a dictionary.
+        """
+        return {
+            "asset": self.asset,
+            "department": self.department,
+            "version": self.version,
+            "status": self.status.value
+        }
+
+    def from_dict(data: dict):
+        """
+        Create an AssetVersion instance from a dictionary.
+
+        Args:
+            data (dict): A dictionary with keys 'asset', 'department',
+                         'version', and 'status'.
+        Returns:
+            AssetVersion: An instance of AssetVersion created from the
+                          dictionary data.
+        """
+        asset = data["asset"]
+        department = data["department"]
+        version = data["version"]
+        status = Status.from_string(data["status"])
+        return AssetVersion(
+            asset=asset,
+            department=department,
+            version=version,
+            status=status
+        )

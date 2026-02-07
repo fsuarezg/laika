@@ -3,17 +3,23 @@ from laika_pipeline.lib.load_json import load_json
 from laika_pipeline.pipeline.asset import Asset
 from laika_pipeline.pipeline.asset_version import AssetVersion
 from laika_pipeline.validation.operation_result import OperationResult
+from laika_pipeline.db.storage_backend import StorageBackend
 
 
 class Project():
     """
     A class representing a project in the pipeline.
     """
-    def __init__(self, name: str):
+    def __init__(
+            self,
+            name: str,
+            storage_backend: StorageBackend = None
+            ):
         self._name = name
         self._assets = []
         self._asset_versions = []
         self.validation_errors = []
+        self.storage_backend = storage_backend
 
     @property
     def name(self):
@@ -106,15 +112,22 @@ class Project():
             }
         )
 
-    # # list all assets
     def list_assets(self) -> list[Asset]:
+        """ List all the assets in the project
+
+        Returns:
+            list[Asset]: list of assets
+        """
         return self.assets
 
-    # # list versions of an asset
     def list_asset_versions(self) -> list[AssetVersion]:
+        """ List all the asset versions in the project
+
+        Returns:
+            list[AssetVersion]: list all asset versions
+        """
         return self.asset_versions
 
-    # # retrieve asset by name
     def get_asset(self, asset_name: str, asset_type: str) -> Asset | None:
         """
         Retrieve an asset from the project, if not found a validation error
@@ -141,7 +154,6 @@ class Project():
         self.validation_errors.append(validation_result.error_message)
         return None
 
-    # # retrieve asset version by version number
     def get_asset_version(
             self,
             asset_name: str,
@@ -173,3 +185,23 @@ class Project():
         )
         self.validation_errors.append(validation_result.error_message)
         return None
+
+    # --------------------------------------------------------------------------
+    # Backend storage methods
+    # --------------------------------------------------------------------------
+
+    def save(self):
+        """ Save the project data to the storage backend if it exists,
+            otherwise do nothing.
+        """
+        if self.storage_backend:
+            self.storage_backend.save_assets(self.assets)
+            self.storage_backend.save_asset_versions(self.asset_versions)
+
+    def load(self):
+        """ Load the project data from the storage backend if it exists,
+            otherwise do nothing.
+        """
+        if self.storage_backend:
+            self._assets = self.storage_backend.load_assets()
+            self._asset_versions = self.storage_backend.load_asset_versions()

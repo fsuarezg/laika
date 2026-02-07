@@ -72,6 +72,9 @@ class Asset():
     def code(self):
         return self._code
 
+    def generate_code(self, name, asset_type):
+        return f"{name.lower().replace(' ', '_')}_{asset_type.value}"
+
     def validate(self) -> OperationResult:
         """
         Validate the asset's properties.
@@ -97,5 +100,29 @@ class Asset():
             )
         return OperationResult(success=True)
 
-    def generate_code(self, name, asset_type):
-        return f"{name.lower().replace(' ', '_')}_{asset_type.value}"
+    def to_dict(self) -> dict:
+        """
+        Convert the Asset instance to a dictionary.
+
+        Returns:
+            dict: A dictionary representation of the Asset.
+        """
+        return {
+            "name": self.name,
+            "type": self.asset_type.value,
+            "code": self.code
+        }
+
+    def from_dict(data: dict):
+        """
+        Create an Asset instance from a dictionary.
+
+        Args:
+            data (dict): A dictionary containing the asset's properties.
+
+        Returns:
+            Asset: A new Asset instance created from the dictionary.
+        """
+        name = data["name"]
+        asset_type = AssetType.from_string(data["type"])
+        return Asset(name=name, asset_type=asset_type)
