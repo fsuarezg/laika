@@ -111,7 +111,8 @@ class Project():
         return self.assets
 
     # # list versions of an asset
-    # list_asset_versions(asset_name, type)
+    def list_asset_versions(self) -> list[AssetVersion]:
+        return self.asset_versions
 
     # # retrieve asset by name
     # get_asset(asset_name, type)
