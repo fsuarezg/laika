@@ -40,7 +40,6 @@ class Project():
         data = load_json(file_path)
         for entry in data:
             asset_entry = entry['asset']
-            # TODO handle type not being in the enum
             asset = Asset(
                         name=asset_entry['name'],
                         asset_type=asset_entry['type']
@@ -48,7 +47,6 @@ class Project():
             validation_result = self.add_asset(asset)
             if not validation_result.success:
                 self.validation_errors.append(validation_result.error_message)
-            # TODO handle status not being in the enum
             asset_version = AssetVersion(
                         asset=asset.code,
                         department=entry['department'],

@@ -27,9 +27,7 @@ class AssetVersion():
         self._asset = asset
         self._department = department
         self._version = version
-        if isinstance(status, str):
-            status = Status.from_string(status)
-        self._status = status
+        self._status = self._normalize_status(status)
 
     def __eq__(self, other: Any) -> bool:
         """
@@ -103,6 +101,12 @@ class AssetVersion():
             raise TypeError("Status must be a valid Status.")
         self._status = value
 
+    def _normalize_status(self, value: str | Status) -> Status | str:
+        if isinstance(value, Status):
+            return value
+        enum_value, raw = Status.from_string(value)
+        return enum_value if enum_value is not None else raw
+
     def validate(self) -> OperationResult:
         """ Validate the asset version's properties.
 
@@ -166,7 +170,7 @@ class AssetVersion():
         asset = data["asset"]
         department = data["department"]
         version = data["version"]
-        status = Status.from_string(data["status"])
+        status, _ = Status.from_string(data["status"])
         return AssetVersion(
             asset=asset,
             department=department,

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from enum import Enum
 
 
@@ -22,16 +23,23 @@ class AssetType(Enum):
         return [item.value for item in cls]
 
     @classmethod
-    def from_string(cls, value: str):
+    def from_string(cls, value: str) -> tuple[AssetType | None, str]:
         """
         Convert a string to an AssetType (case insensitive).
-        Raises ValueError if no match is found.
+        To not raise an error, if this fails it will return None and the
+        original string, we validate the value in the Asset class.
+
+        Args:
+            value (str): The string to convert.
+
+        Returns:
+            tuple: A tuple of (AssetType or None, original string).
         """
         normalized = value.strip().lower()
         for item in cls:
             if item.value == normalized:
-                return item
-        raise ValueError(f"Unknown AssetType: {value}")
+                return item, value
+        return None, value
 
     @classmethod
     def is_valid(cls, value: str) -> bool:

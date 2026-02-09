@@ -1,3 +1,4 @@
+from __future__ import annotations
 from enum import Enum
 
 
@@ -18,16 +19,17 @@ class Status(Enum):
         return [item.value for item in cls]
 
     @classmethod
-    def from_string(cls, value: str):
+    def from_string(cls, value: str) -> tuple[Status | None, str]:
         """
         Convert a string to a Status (case insensitive).
-        Raises ValueError if no match is found.
+        To not raise an error if this fails it will return None and the
+        original string, we validate the value in the AssetVersion class.
         """
         normalized = value.strip().lower()
         for item in cls:
             if item.value == normalized:
-                return item
-        raise ValueError(f"Unknown Status: {value}")
+                return item, value
+        return None, value
 
     @classmethod
     def is_valid(cls, value: str) -> bool:
