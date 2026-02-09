@@ -9,7 +9,7 @@ TEST_PROJECT_FILEPATH = 'sample_data/test_project'
 
 def main(filepath: str = SAMPLE_DATA_FILEPATH):
     storage_backend = StorageJSON(file_path=TEST_PROJECT_FILEPATH)
-    project = Project(name="Sample Project", storage_backend=storage_backend)
+    project = Project(name="Default Project", storage_backend=storage_backend)
     project.load_assets(filepath)
 
     pprint(project.assets)
