@@ -53,9 +53,9 @@ def load_assets(
     """
     Load assets and versions from a JSON file.
 
-    This function reads asset metadata and version information from a JSON file,
-    validates each entry, and stores valid assets. Invalid entries are skipped
-    and logged in the validation errors.
+    This function reads asset metadata and version information from a JSON
+    file, validates each entry, and stores valid assets. Invalid entries are
+    skipped and logged in the validation errors.
 
     Args:
         file_path (str): Path to the JSON file containing assets.
