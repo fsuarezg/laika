@@ -3,7 +3,7 @@ import sys
 import argparse
 import signal
 
-import laika_pipeline as lp 
+import laika_pipeline as lp
 from laika_pipeline.db.storage_json import StorageJSON
 
 
