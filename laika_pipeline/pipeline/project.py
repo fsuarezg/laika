@@ -37,6 +37,13 @@ class Project():
             self,
             file_path: str
     ) -> None:
+        """
+        Load Assets and Asset Versions from a given json file.
+
+        Args:
+            file_path (str): the path to the json file containing the asset and
+                             asset version data
+        """
         data = load_json(file_path)
         for entry in data:
             asset_entry = entry['asset']
@@ -61,6 +68,20 @@ class Project():
         self,
         asset: Asset
     ) -> OperationResult:
+        """
+        Add an asset to the project context. This method validates the asset
+        and checks for duplicates before adding it to the project.
+
+        Args:
+            asset (Asset): Asset object to be added in the project context
+
+        Raises:
+            TypeError: if the provided asset is not an instance of Asset
+
+        Returns:
+            OperationResult: The result of the operation, indicating success or
+                             failure.
+        """
         if not isinstance(asset, Asset):
             raise TypeError("Asset must be an instance of Asset.")
         valid_asset = asset.validate()
@@ -85,6 +106,22 @@ class Project():
             self,
             asset_version: AssetVersion
     ) -> OperationResult:
+        """ Add an asset version to the project context. This method validates
+        the asset version and checks for duplicates before adding it to the
+        project.
+
+        Args:
+            asset_version (AssetVersion): The Asset Version to be added in the
+                                          project context
+
+        Raises:
+            TypeError: if the provided asset version is not an instance of
+                       AssetVersion
+
+        Returns:
+            OperationResult: The result of the operation, indicating success or
+                             failure.
+        """
         if not isinstance(asset_version, AssetVersion):
             raise TypeError(
                 "Asset version must be an instance of AssetVersion.")
