@@ -24,16 +24,120 @@ def parse_args():
     return parser.parse_args()
 
 
+def cmd_load(args):
+    # TODO
+    pass
+
+
+def cmd_add(args):
+    # TODO
+    pass
+
+
+def cmd_get(args):
+    # TODO
+    pass
+
+
+def cmd_list(args):
+    # TODO
+    pass
+
+
+def cmd_versions_add(args):
+    # TODO
+    pass
+
+
+def cmd_versions_get(args):
+    # TODO
+    pass
+
+def cmd_versions_list(args):
+    # TODO
+    pass
+
+
+def cmd_save(args):
+    # TODO
+    pass
+
+
+def cmd_load_project(args):
+    # TODO
+    pass
+
+
+def cmd_errors(args):
+    # TODO
+    pass
+
+
+def cmd_help(args):
+    help_text = """
+    Available commands:
+    load <file.json>                           Load assets from JSON file
+    add <asset.json>                           Add a new asset from JSON file
+    get <asset_name> <type>                    Get an asset by name and type
+    list                                       List all assets
+    versions add <asset_name> <version.json>   Add a version for an asset
+    versions get <asset_name> <type> <version> Get a specific asset version
+    versions list <asset_name> <type>          List all versions of an asset
+    save                                       Save project to storage
+    load_project                               Load project from storage
+    errors                                     Show validation errors
+    help                                       Show this help message
+    exit                                       Exit the CLI
+    """
+    print(help_text)
+
+
 def interactive_loop():
     print("Entering interactive mode. Type 'exit' to quit.")
+
+    commands = {
+        'load': cmd_load,
+        'add': cmd_add,
+        'get': cmd_get,
+        'list': cmd_list,
+        'versions': None,  # Special handling
+        'save': cmd_save,
+        'load_project': cmd_load_project,
+        'errors': cmd_errors,
+        'help': cmd_help,
+        'exit': None,  # Special handling
+    }
+
     while True:
         try:
-            command = input(">> ")
-            if command.lower() in ['exit', 'quit']:
-                print("Exiting interactive mode.")
-                break
-            else:
-                print(f"Unknown command: {command}")
+            user_input = input("\n>> ").strip()
+            if not user_input:
+                continue
+
+            parts = user_input.split()
+            command = parts[0].lower()
+            args = parts[1:]
+
+            match command:
+                case 'versions':
+                    sub_command = args[0].lower().strip() if args else ''
+                    match sub_command:
+                        case 'add':
+                            cmd_versions_add(None)
+                        case 'get':
+                            cmd_versions_get(None)
+                        case 'list':
+                            cmd_versions_list(None)
+                        case _:
+                            print(f"Unknown versions command: {sub_command}")
+                case 'exit' | 'quit':
+                    print("Exiting interactive mode.")
+                    break
+                case _:
+                    if command in commands:
+                        commands[command](args)
+                    else:
+                        print(f"Unknown command: {command}")
         except KeyboardInterrupt:
             print("\nExiting interactive mode.")
             break
