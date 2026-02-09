@@ -12,6 +12,7 @@ dependencies = [
 
 [tool.poetry.scripts]
 run_tests = "laika_pipeline.test.run_tests:main"
+run_api_example = "laika_pipeline.test.api_examples:main"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
