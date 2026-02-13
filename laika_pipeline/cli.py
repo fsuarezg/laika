@@ -105,8 +105,16 @@ def cmd_load_project(args):
 
 
 def cmd_errors(args):
-    # TODO
-    pass
+    """Show validation errors."""
+    errors = lp.get_validation_errors()
+    if not errors:
+        print("No validation errors")
+        return
+    print(f"{len(errors)} validation errors:")
+    for err in errors[:10]:
+        print(f"  - {err}")
+    if len(errors) > 10:
+        print(f"  ... and {len(errors) - 10} more")
 
 
 def cmd_help(args):
