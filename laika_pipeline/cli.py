@@ -25,8 +25,25 @@ def parse_args():
 
 
 def cmd_load(args):
-    # TODO
-    pass
+    """Load assets from a JSON file."""
+    if not args:
+        print("Error: load requires a file path")
+        return
+    filepath = args[0]
+    if not os.path.exists(filepath):
+        print(f"Error: File not found: {filepath}")
+        return
+    try:
+        report = lp.load_assets(filepath)
+        print(f"Loaded {report['valid']} valid assets")
+        if report['errors']:
+            print(f"{len(report['errors'])} errors during load:")
+            for err in report['errors'][:5]:
+                print(f"  - {err}")
+            if len(report['errors']) > 5:
+                print(f"  ... and {len(report['errors']) - 5} more")
+    except Exception as e:
+        print(f"Error loading assets: {e}")
 
 
 def cmd_add(args):
