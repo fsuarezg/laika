@@ -47,8 +47,26 @@ def cmd_load(args):
 
 
 def cmd_add(args):
-    # TODO
-    pass
+    """Add a new asset from a JSON file."""
+    if not args:
+        print("Error: add requires a file path")
+        return
+    filepath = args[0]
+    if not os.path.exists(filepath):
+        print(f"Error: File not found: {filepath}")
+        return
+    try:
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+        asset = lp.Asset(data['name'], data['type'])
+        result = lp.add_asset(asset)
+        if result['success']:
+            print(f"Asset added: {asset.name} ({asset.asset_type.value})")
+            print(f"Code: {result['asset_code']}")
+        else:
+            print(f"Failed to add asset: {result['error']}")
+    except Exception as e:
+        print(f"Error adding asset: {e}")
 
 
 def cmd_get(args):
