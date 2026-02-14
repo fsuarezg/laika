@@ -59,7 +59,7 @@ def cmd_add(args):
     try:
         with open(filepath, 'r') as f:
             data = json.load(f)
-        asset = lp.Asset(data['name'], data['type'])
+        asset = lp.Asset(data['name'], data['asset_type'])
         result = lp.add_asset(asset)
         if result['success']:
             print(f"Asset added: {asset.name} ({asset.asset_type.value})")
