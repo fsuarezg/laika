@@ -1,220 +1,31 @@
-# LAIKA Pipeline Engineering Take-Home Challenge
+# LAIKA Coding challenge
 
-**Welcome!**
+## Code structure of laika_pipeline
 
-This challenge is designed to demonstrate your ability to write clean, maintainable, well-structured, and well-tested code.
+### Folders
+- **db**: Contains the persistent storage layer of the project. 
+- **example**: Contains code example on how to use the API.
+- **lib**: Contains general helper functions.
+- **pipeline**: Cintains the main object types of the pipeline.
+- **test**: Contains all unittests to test the API.
+- **validation**: Contains code partaining to validating logic. 
 
-This is **not** a timed exam. Feel free to take breaks and approach this as you would real production code. Typical completion time: **~4–6 hours**, including tests.
+### Interface
+- **api.py**: The public API to interact with the mini pipeline.
+- **cli.py**: The command line interface to interacte with the mini pipeline.
 
-## ✅ Challenge Goal
+## Poetry
 
-You are tasked with building a small **Asset Validation & Registration Service** — a lightweight system that can:
+Poetry was used as an environment packager. A simple `pyproject.toml` file is included which declares a single place how the project is built, what it depends on, and how tools should behave.
 
-1. Load asset metadata from a sample JSON file. 
-   - Keep in mind, we will stress test your app with erroneous and large datasets. It would be a good idea to augment the sample set to ensure your implementation is durable.
-2. Validate assets using an extensible validation pipeline
-3. Store the validated assets in a persistence layer
-4. Expose a simple API or CLI for querying assets
-5. Include unit tests
+To make use of poetry:
 
-_This exercise should be implemented primarily in Python. You’re welcome to add a Qt or web-based front end if you’d like, but Python should remain the core language._
+`pip install poetry`: to install poetry
 
-## ✅ Functional Requirements
+`poetry install`: will generate a poetry.lock file
 
-### Asset Data Model
+Three script commands are defined in the toml file:
 
-Your data should be validated against the following asset data model. What we’re looking for here is a clear extensible representation of an asset, versions of an asset, and their properties.  
-
-Each asset has:
-
-Asset:
-| Field | Type | Notes |
-| ------- | ------ | ------- |
-| name | string | required |
-| type | enum | character, prop, set, environment, vehicle, dressing, fx |
-
-Asset Version:
-| Field | Type | Notes |
-| ------- | ------ | ------- |
-| asset | foreign key | reference to the asset this version represents |
-| department | string | modeling, texturing, rigging, animation, cfx, fx |
-| version | integer | ≥ 1 |
-| status | enum | active, inactive |
-
-- Asset uniqueness is described by its (name and type)
-   - We do not allow multiple assets with the same name+type, but same name+different type or different name+same type are both fine 
-- Each Asset should have at least 1 version associated with it and no duplicate versions 
-   - Versions should also increment linearly by integer
-- Asset version uniqueness is described by the (asset + department + version) 
-   - You may have `hero+animation+v1` and `hero+cfx+v1`, but not two `hero+animation+v1` entries
-
----
-
-### Validation Pipeline
-
-Now that we know the rules, the next task is to create your validation logic. There are a few ways to go about this, but we’ll leave it up to you to decide what the best approach should be. Some things to keep in mind are extensibility and composability. 
-
-Your validation system should obey the following rules:
-- Name is required
-- Type is a known valid value
-- Department is required
-- Version is an integer greater than 1
-- Status is a known valid value
-
-Invalid data should not halt execution. Your solution should detect and handle invalid entries gracefully (e.g., via validation, skipping, or logging), while continuing to process all valid entries.
-
----
-
-### Storage
-
-Now that our data is squeaky clean and valid, we need someplace to store it. Please create a persistence layer in the application, this can be a full on DB or a file backed solution. The persistence layer should be abstracted and portable, different services should be able to easily utilize it. 
-
-Choose one of the following:
-- ✅ A lightweight DB such as SQLite
-- ✅ JSON file storage with storage abstraction
-- ✅ In-memory DB with a storage layer abstraction
-
----
-### Creating the package/application
-
-Now that we know the parts that are necessary, it’s time to allow users to interact with your system. 
-
-The main thing we want to see is a Python API, build a clean API that can be consumed by other developers or apps. This API will ingest, validate, and store assets and asset versions; users should then be able to retrieve the validated asset and version information. 
-
-Next, if you’re up for it, create a CLI that utilizes your API.
-
-For bonus points, create a REST API (bonus bonus points if you include a frontend app). 
-
-**Python API**
-```python
-# Example interface:
-
-# Load sample data
-load_assets(file.json)
-
-# add an asset
-add_asset(asset)
-
-# add an asset version
-add_asset_version(asset, version)
-
-# list all assets
-list_assets()
-
-# list versions of an asset
-list_asset_versions(asset_name, type)
-
-# retrieve asset by name
-get_asset(asset_name, type)
-
-# retrieve asset version by version number
-get_asset_version(asset_name, type, version_num)
-```
-
-**Optional: CLI**
-```sh
-# Example commands:
-
-# load assets
-load <file.json>
-
-# add an asset
-add <asset.json>
-
-# get an asset
-get <asset_name> <type>
-
-# list all assets
-list
-
-# add an asset version
-versions add <asset_name> <version.json>
-
-# get an asset version
-versions get <asset_name> <type> <version_num>
-
-# list all asset versions
-versions list <asset_name> <type>
-```
-_CLI frameworks like click or argparse are welcome._
-
-**Bonus Points: REST API**
-
-```sh
-# Example endpoints:
-
-# Load sample data
-POST /assets/load
-
-# add an asset
-POST /assets
-
-# add an asset version
-POST /assets/versions
-
-# list all assets
-GET /assets
-
-# retrieve asset by name
-GET /assets?asset={asset_name}&type={asset_type}
-
-# list all versions of an asset
-GET /assets/versions?asset={asset_name}&type={asset_type}
-
-# retrieve an asset version
-GET /assets/versions?asset={asset_name}&type={asset_type}&version={asset_version}
-```
-_Frameworks allowed: Flask, FastAPI, Django, or similar._
-
----
-
-### Tests
-
-Testing is an important part of any application development cycle. Make sure to include robust tests that cover any business logic such as validation and persistence. You should also think about possible edge cases that may arise. We’re looking for unit tests, so sticking with pytest or unittest is a good path.
-
-## ✅ Deliverables
-
-Please create a git repository, complete with detailed commits. Once you’re happy with the application, you can either send us a link to your GitHub repo or a compressed file with your codebase as a zip/tar file. 
-
-Please include:
-- ✅ Source code
-- ✅ Instructions to run and test
-- ✅ Brief technical overview (design choices, architecture decisions, future improvements)
-
-_Docker is welcome, but not required._
-
-## ✅ Evaluation Criteria
-
-When it comes time for us to review your code challenge, we’ll be looking at a few key aspects. 
-
-| Category | What we look for |
-| ------- | ------ |
-| Code readability | clean, logical structure, maintainable |
-| Architecture | clear separation of concerns, modular design |
-| Extensibility | easy to add new validation rules or new storage types |
-| Testing | meaningful unit test coverage |
-| Documentation | clear README and code comments |
-| Error handling | helpful messages, graceful failures |
-| Performance & efficiency | sensible approaches, no over-engineering |
-
-## ✅ Stretch Ideas (Optional)
-
-Not required, but impressive if included:
-
-- Configurable validation rules (via JSON/YAML)
-- Logging 
-- Docker environment
-- Basic PyQT or web front-end
-- CI config (GitHub Actions, etc.)
-
-<br>
-
----
-
-<br>
-
-That’s the entire challenge. Build as you would build production-quality code. 
-
-If you have any questions or hit blockers during the challenge, feel free to reach out.
-
-Good luck — we can’t wait to see your approach!
+- `poetry run run_tests`: runs all the unittests.
+- `potry run run_demo`: runs a very simple project demo.
+- `poetry run_api_example`: runs some example of api usage defined.
