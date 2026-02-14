@@ -29,11 +29,11 @@ def main(filepath: str = SAMPLE_DATA_FILEPATH):
     project.load()
 
     print("=" * 70)
-    print("ASSETS ATER LOAD")
+    print("ASSETS AFTER LOAD")
     print("=" * 70)
     pprint(project.assets)
     print("=" * 70)
-    print("ASSET VERSIONS ATER LOAD")
+    print("ASSET VERSIONS AFTER LOAD")
     print("=" * 70)
     pprint(project.asset_versions)
 
