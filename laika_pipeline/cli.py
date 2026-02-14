@@ -191,8 +191,13 @@ def cmd_save(args):
 
 
 def cmd_load_project(args):
-    # TODO
-    pass
+    """Load the project from storage.
+    This will load assets from the storage backend"""
+    result = lp.load()
+    if result['success']:
+        print("Project loaded successfully")
+    else:
+        print(f"Failed to load project: {result['error']}")
 
 
 def cmd_errors(args):
