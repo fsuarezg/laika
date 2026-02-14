@@ -87,8 +87,15 @@ def cmd_get(args):
 
 
 def cmd_list(args):
-    # TODO
-    pass
+    """List all assets."""
+    assets = lp.list_assets()
+    if not assets:
+        print("No assets loaded.")
+        return
+    print(f"{len(assets)} assets:")
+    for asset in assets:
+        print(f"  - {asset.name} ({asset.asset_type.value})"
+              f" [code: {asset.code}]")
 
 
 def cmd_versions_add(args):
