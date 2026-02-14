@@ -1,28 +1,27 @@
-from pprint import pprint
+"""Test runner that discovers and runs all test_*.py modules.
 
-from laika_pipeline.pipeline.project import Project
-from laika_pipeline.db.storage_json import StorageJSON
+Place this file in the test package and run it to execute all
+unit tests split across multiple `test_*.py` files.
+"""
 
-SAMPLE_DATA_FILEPATH = 'sample_data/asset_data.json'
-TEST_PROJECT_FILEPATH = 'sample_data/test_project'
-
-
-def main(filepath: str = SAMPLE_DATA_FILEPATH):
-    storage_backend = StorageJSON(file_path=TEST_PROJECT_FILEPATH)
-    project = Project(name="Default Project", storage_backend=storage_backend)
-    project.load_assets(filepath)
-
-    pprint(project.assets)
-    pprint(project.asset_versions)
-    pprint(project.validation_errors)
-
-    project.save()
-    project.load()
-
-    pprint(project.assets)
-    pprint(project.asset_versions)
+import os
+import sys
+import unittest
 
 
-# -----------------------------------------------------------------------------
-if __name__ == '__main__':
+def main() -> None:
+    loader = unittest.TestLoader()
+    here = os.path.dirname(__file__)
+
+    # Discover all test_*.py files in this directory
+    suite = loader.discover(start_dir=here, pattern="test_*.py")
+
+    runner = unittest.TextTestRunner(verbosity=2)
+    result = runner.run(suite)
+
+    # Exit non-zero on failure for CI compatibility
+    sys.exit(not result.wasSuccessful())
+
+
+if __name__ == "__main__":
     main()
