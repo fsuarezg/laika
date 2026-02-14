@@ -99,8 +99,47 @@ def cmd_list(args):
 
 
 def cmd_versions_add(args):
-    # TODO
-    pass
+    """Add a new asset version from a JSON file."""
+    # NOTE: I struggled with implementing the add versions command as specified
+    # in the task description, which was to have the user run
+    # `versions add <asset_name> <version.json>`.
+    # The main issue is that asset_name is not unique across the project -
+    # you need both the asset_name and asset_type to identify the asset to
+    # which the version belongs.
+    print(args)
+    if len(args) < 3:
+        print("Error: versions add requires "
+              "<asset_name> <asset_type> <version.json>")
+        return
+    asset_name, asset_type, filepath = args[0], args[1], args[2]
+    if not os.path.exists(filepath):
+        print(f"Error: File not found: {filepath}")
+        return
+    try:
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+
+        asset = lp.get_asset(asset_name, asset_type)
+        if not asset:
+            print(f"Error: Asset not found: {asset_name} ({asset_type})")
+            return
+
+        version = lp.AssetVersion(
+            asset=asset.code,
+            department=data['department'],
+            version=data['version'],
+            status=data.get('status', 'active')
+        )
+        result = lp.add_asset_version(version)
+        if result['success']:
+            print("Version added:")
+            print(f"Asset: {asset_name}")
+            print(f"Department: {data['department']}")
+            print(f"Version: {data['version']}")
+        else:
+            print(f"Failed to add version: {result['error']}")
+    except Exception as e:
+        print(f"Error adding version: {e}")
 
 
 def cmd_versions_get(args):
@@ -142,9 +181,9 @@ def cmd_help(args):
     add <asset.json>                           Add a new asset from JSON file
     get <asset_name> <type>                    Get an asset by name and type
     list                                       List all assets
-    versions add <asset_name> <version.json>   Add a version for an asset
-    versions get <asset_name> <type> <version> Get a specific asset version
-    versions list <asset_name> <type>          List all versions of an asset
+    versions add <asset_name> <asset_type> <version.json>   Add a version for an asset
+    versions get <asset_name> <asset_type> <version> Get a specific asset version
+    versions list <asset_name> <asset_type>          List all versions of an asset
     save                                       Save project to storage
     load_project                               Load project from storage
     errors                                     Show validation errors
@@ -204,11 +243,11 @@ def interactive_loop():
                     sub_command = args[0].lower().strip() if args else ''
                     match sub_command:
                         case 'add':
-                            cmd_versions_add(None)
+                            cmd_versions_add(args[1:])
                         case 'get':
-                            cmd_versions_get(None)
+                            cmd_versions_get(args[1:])
                         case 'list':
-                            cmd_versions_list(None)
+                            cmd_versions_list(args[1:])
                         case _:
                             print(f"Unknown versions command: {sub_command}")
                 case 'exit' | 'quit':
