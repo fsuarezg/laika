@@ -29,3 +29,8 @@ Three script commands are defined in the toml file:
 - `poetry run run_tests`: runs all the unittests.
 - `potry run run_demo`: runs a very simple project demo.
 - `poetry run_api_example`: runs some example of api usage defined.
+
+
+Improvements:
+- Instead of lists us dictionaries to store asset and asset versions in
+the project class
