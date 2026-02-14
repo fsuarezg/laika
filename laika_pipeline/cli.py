@@ -71,8 +71,19 @@ def cmd_add(args):
 
 
 def cmd_get(args):
-    # TODO
-    pass
+    """Get a specific asset by name and type."""
+    if len(args) < 2:
+        print("Error: get requires <asset_name> <type>")
+        return
+    name, asset_type = args[0], args[1]
+    asset = lp.get_asset(name, asset_type)
+    if asset:
+        print("Found asset:")
+        print(f"Name: {asset.name}")
+        print(f"Type: {asset.asset_type.value}")
+        print(f"Code: {asset.code}")
+    else:
+        print(f"Asset not found: {name} ({asset_type})")
 
 
 def cmd_list(args):
