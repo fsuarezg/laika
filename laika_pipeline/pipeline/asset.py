@@ -49,21 +49,21 @@ class Asset():
     def name(self):
         return self._name
 
-    @name.setter
-    def name(self, value: str):
-        if not isinstance(value, str):
-            raise TypeError("Asset name must be a string.")
-        self._name = value
+    # @name.setter
+    # def name(self, value: str):
+    #     if not isinstance(value, str):
+    #         raise TypeError("Asset name must be a string.")
+    #     self._name = value
 
     @property
     def asset_type(self):
         return self._asset_type
 
-    @asset_type.setter
-    def asset_type(self, value: AssetType):
-        if not isinstance(value, AssetType):
-            raise TypeError("Asset type must be a valid AssetType.")
-        self._asset_type = value
+    # @asset_type.setter
+    # def asset_type(self, value: AssetType):
+    #     if not isinstance(value, AssetType):
+    #         raise TypeError("Asset type must be a valid AssetType.")
+    #     self._asset_type = value
 
     @property
     def code(self):
