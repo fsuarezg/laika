@@ -148,27 +148,37 @@ def cmd_versions_get(args):
         print("Error: versions get requires "
               "<asset_name> <asset_type> <version_num>")
         return
-    name, asset_type, version_num = args[0], args[1], args[2]
+    asset_name, asset_type, version_num = args[0], args[1], args[2]
     try:
         version_num = int(version_num)
     except ValueError:
         print("Error: version_num must be an integer")
         return
 
-    version = lp.get_asset_version(name, asset_type, version_num)
+    version = lp.get_asset_version(asset_name, asset_type, version_num)
     if version:
         print("Found version:")
-        print(f"Asset: {name} ({asset_type})")
+        print(f"Asset: {asset_name} ({asset_type})")
         print(f"Department: {version.department}")
         print(f"Version: {version.version}")
         print(f"Status: {version.status.value}")
     else:
-        print(f"Version not found: {name} ({asset_type}) v{version_num}")
+        print(f"Version not found: {asset_name} ({asset_type}) v{version_num}")
 
 
 def cmd_versions_list(args):
-    # TODO
-    pass
+    """List all versions of an asset."""
+    if len(args) < 2:
+        print("Error: versions list requires <asset_name> <asset_type>")
+        return
+    asset_name, asset_type = args[0], args[1]
+    versions = lp.list_asset_versions(asset_name, asset_type)
+    if not versions:
+        print(f"No versions found for {asset_name} ({asset_type})")
+        return
+    print(f"{len(versions)} versions of {asset_name} ({asset_type}):")
+    for v in sorted(versions, key=lambda x: x.version):
+        print(f"  v{v.version} - {v.department} - {v.status.value}")
 
 
 def cmd_save(args):
