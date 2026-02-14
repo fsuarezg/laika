@@ -6,6 +6,7 @@ import os
 import json
 
 import laika_pipeline as lp
+from laika_pipeline.lib.load_json import load_json
 from laika_pipeline.db.storage_json import StorageJSON
 
 
@@ -57,8 +58,7 @@ def cmd_add(args):
         print(f"Error: File not found: {filepath}")
         return
     try:
-        with open(filepath, 'r') as f:
-            data = json.load(f)
+        data = load_json(filepath)
         asset = lp.Asset(data['name'], data['asset_type'])
         result = lp.add_asset(asset)
         if result['success']:
@@ -116,8 +116,7 @@ def cmd_versions_add(args):
         print(f"Error: File not found: {filepath}")
         return
     try:
-        with open(filepath, 'r') as f:
-            data = json.load(f)
+        data = load_json(filepath)
 
         asset = lp.get_asset(asset_name, asset_type)
         if not asset:
