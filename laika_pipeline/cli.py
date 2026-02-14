@@ -182,8 +182,12 @@ def cmd_versions_list(args):
 
 
 def cmd_save(args):
-    # TODO
-    pass
+    """Save the project to storage."""
+    result = lp.save()
+    if result['success']:
+        print("Project saved successfully")
+    else:
+        print(f"Failed to save project: {result['error']}")
 
 
 def cmd_load_project(args):
