@@ -136,8 +136,27 @@ def cmd_help(args):
     print(help_text)
 
 
+def _print_welcome():
+    print("Welcome to the Laika Pipeline CLI!")
+    logo = """
+                                #####
+                          ##  ##   ##
+                     ##  ##   ##   ##
+                 ##  ##  ##   ##   ##
+          #####  ##  ## ##    #######
+    ##   ##  ##  ##  ####     ##   ##
+    ##   ######  ##  ## ##    ##   ##
+    ##   ##  ##  ##  ##  ##   ##   ##
+    #### ##  ##  ##  ##   ##  ##   ##
+    """
+    print(logo)
+    print("Entering interactive mode.")
+    print("Type 'exit' to quit.")
+    print("Type 'help' for a list of commands.")
+
+
 def interactive_loop():
-    print("Entering interactive mode. Type 'exit' to quit.")
+    _print_welcome()
 
     commands = {
         'load': cmd_load,
