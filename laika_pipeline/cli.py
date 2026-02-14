@@ -220,8 +220,8 @@ def cmd_help(args):
     get <asset_name> <type>                    Get an asset by name and type
     list                                       List all assets
     versions add <asset_name> <asset_type> <version.json>   Add a version for an asset
-    versions get <asset_name> <asset_type> <version> Get a specific asset version
-    versions list <asset_name> <asset_type>          List all versions of an asset
+    versions get <asset_name> <asset_type> <version>        Get a specific asset version
+    versions list <asset_name> <asset_type>                 List all versions of an asset
     save                                       Save project to storage
     load_project                               Load project from storage
     errors                                     Show validation errors
