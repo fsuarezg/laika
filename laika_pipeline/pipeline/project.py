@@ -3,6 +3,9 @@ from laika_pipeline.lib.load_json import load_json
 from laika_pipeline.pipeline.asset import Asset
 from laika_pipeline.pipeline.asset_version import AssetVersion
 from laika_pipeline.validation.operation_result import OperationResult
+from laika_pipeline.validation.asset_validator import AssetValidator
+from laika_pipeline.validation.asset_version_validator import (
+    AssetVersionValidator)
 from laika_pipeline.db.storage_backend import StorageBackend
 
 
@@ -87,14 +90,14 @@ class Project():
         valid_asset = asset.validate()
         if valid_asset.success is False:
             return valid_asset
-        if asset in self.assets:
-            return OperationResult(
-                success=False,
-                error_message=(
-                    f"Asset '{asset.name}' of type '{asset.asset_type}' "
-                    f"already exists"
-                )
-            )
+
+        validator = AssetValidator()
+        result = validator.validate_asset_has_version(asset, self)
+        if result.success is False:
+            return result
+        result = validator.validate_asset_is_unique(asset, self)
+        if result.success is False:
+            return result
 
         self.assets.append(asset)
         return OperationResult(
@@ -128,15 +131,14 @@ class Project():
         valid_asset_version = asset_version.validate()
         if valid_asset_version.success is False:
             return valid_asset_version
-        if asset_version in self.asset_versions:
-            return OperationResult(
-                success=False,
-                error_message=(
-                    f"Asset version for asset '{asset_version.asset}' "
-                    f"version '{asset_version.version}' already exists in the "
-                    f"project."
-                )
-            )
+
+        validator = AssetVersionValidator()
+        result = validator.validate_linear_versioning(asset_version, self)
+        if result.success is False:
+            return result
+        result = validator.validate_version_is_unique(asset_version, self)
+        if result.success is False:
+            return result
 
         self.asset_versions.append(asset_version)
         return OperationResult(
