@@ -60,23 +60,25 @@ def example_2_add_new_asset():
     # Initialize
     lp.initialize("New Project")
 
-    # Create and add a new asset
-    print("\nAdding a new asset 'sword' of type 'prop'...")
+    # Create a new asset
     sword = Asset("sword", "prop")
-    result = lp.add_asset(sword)
-    print(f"  Success: {result['success']}")
-    print(f"  Code: {result['asset_code']}")
 
     # Add a version for this asset
     print("\nAdding version for 'sword'...")
     version = AssetVersion(
-        asset=result['asset_code'],
+        asset=sword.code,
         department="modeling",
         version=1,
         status="active"
     )
     version_result = lp.add_asset_version(version)
     print(f"  Added version: {version_result}")
+
+    # Add the new asset
+    print("\nAdding a new asset 'sword' of type 'prop'...")
+    result = lp.add_asset(sword)
+    print(f"  Success: {result['success']}")
+    print(f"  Code: {result['asset_code']}")
 
     # List what we have
     print("\nAll assets created:")
