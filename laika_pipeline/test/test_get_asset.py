@@ -2,6 +2,7 @@ import unittest
 
 from laika_pipeline import api
 from laika_pipeline.pipeline.asset import Asset
+from laika_pipeline.pipeline.asset_version import AssetVersion
 from laika_pipeline.pipeline.asset_type import AssetType
 
 
@@ -12,6 +13,8 @@ class TestGetAsset(unittest.TestCase):
         """Set up test fixtures."""
         api.initialize()
         self.asset = Asset("hero", "character")
+        v1 = AssetVersion(self.asset.code, "modeling", 1)
+        api.add_asset_version(v1)
         api.add_asset(self.asset)
 
     def tearDown(self):
@@ -50,8 +53,16 @@ class TestGetAsset(unittest.TestCase):
 
     def test_get_asset_returns_correct_object(self):
         """Test that get_asset returns the correct asset object."""
+        from laika_pipeline.pipeline.asset_version import AssetVersion
+
         asset1 = Asset("hero", "character")
         asset2 = Asset("sword", "prop")
+
+        # Add versions to ensure assets are valid
+        v1 = AssetVersion(asset1.code, "modeling", 1, "active")
+        v2 = AssetVersion(asset2.code, "modeling", 1, "active")
+        api.add_asset_version(v1)
+        api.add_asset_version(v2)
 
         api.add_asset(asset1)
         api.add_asset(asset2)

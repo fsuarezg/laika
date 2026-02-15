@@ -12,7 +12,6 @@ class TestListAssetVersions(unittest.TestCase):
         """Set up test fixtures."""
         api.initialize()
         self.asset = Asset("hero", "character")
-        api.add_asset(self.asset)
 
     def tearDown(self):
         """Clean up after each test."""
@@ -32,6 +31,8 @@ class TestListAssetVersions(unittest.TestCase):
 
         api.add_asset_version(v1)
         api.add_asset_version(v2)
+
+        api.add_asset(self.asset)
 
         versions = api.list_asset_versions("hero", "character")
 
@@ -55,6 +56,8 @@ class TestListAssetVersions(unittest.TestCase):
         api.add_asset_version(v1)
         api.add_asset_version(v2)
         api.add_asset_version(v3)
+
+        api.add_asset(self.asset)
 
         versions = api.list_asset_versions("hero", "character")
 

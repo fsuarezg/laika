@@ -2,6 +2,7 @@ import unittest
 
 from laika_pipeline import api
 from laika_pipeline.pipeline.asset import Asset
+from laika_pipeline.pipeline.asset_version import AssetVersion
 
 
 class TestGetProject(unittest.TestCase):
@@ -40,7 +41,10 @@ class TestGetProject(unittest.TestCase):
 
     def test_get_project_after_operations(self):
         """Test get_project after various operations."""
-        api.add_asset(Asset("hero", "character"))
+        asset = Asset("hero", "character")
+        asset_version = AssetVersion(asset.code, "modeling", 1)
+        api.add_asset_version(asset_version)
+        api.add_asset(asset)
         project = api.get_project()
 
         self.assertEqual(len(project.assets), 1)

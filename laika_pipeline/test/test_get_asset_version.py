@@ -13,12 +13,12 @@ class TestGetAssetVersion(unittest.TestCase):
         """Set up test fixtures."""
         api.initialize()
         self.asset = Asset("hero", "character")
-        api.add_asset(self.asset)
-
+        
         v1 = AssetVersion(self.asset.code, "modeling", 1, "active")
         v2 = AssetVersion(self.asset.code, "modeling", 2, "active")
         api.add_asset_version(v1)
         api.add_asset_version(v2)
+        api.add_asset(self.asset)
 
     def tearDown(self):
         """Clean up after each test."""

@@ -2,6 +2,7 @@ import unittest
 
 from laika_pipeline import api
 from laika_pipeline.pipeline.asset import Asset
+from laika_pipeline.pipeline.asset_version import AssetVersion
 
 
 class TestListAssets(unittest.TestCase):
@@ -27,6 +28,12 @@ class TestListAssets(unittest.TestCase):
         asset1 = Asset("hero", "character")
         asset2 = Asset("sword", "prop")
 
+        asset1_v1 = AssetVersion(asset1.code, "modeling", 1)
+        asset2_v1 = AssetVersion(asset2.code, "modeling", 1)
+
+        api.add_asset_version(asset1_v1)
+        api.add_asset_version(asset2_v1)
+
         api.add_asset(asset1)
         api.add_asset(asset2)
 
@@ -42,6 +49,14 @@ class TestListAssets(unittest.TestCase):
         asset2 = Asset("beta", "prop")
         asset3 = Asset("gamma", "environment")
 
+        asset1_v1 = AssetVersion(asset1.code, "modeling", 1)
+        asset2_v1 = AssetVersion(asset2.code, "modeling", 1)
+        asset3_v1 = AssetVersion(asset3.code, "modeling", 1)
+
+        api.add_asset_version(asset1_v1)
+        api.add_asset_version(asset2_v1)
+        api.add_asset_version(asset3_v1)
+
         api.add_asset(asset1)
         api.add_asset(asset2)
         api.add_asset(asset3)
@@ -56,7 +71,10 @@ class TestListAssets(unittest.TestCase):
 
     def test_list_assets_after_clear(self):
         """Test that list_assets returns empty after clear."""
-        api.add_asset(Asset("test", "character"))
+        asset = Asset("test", "character")
+        v1 = AssetVersion(asset.code, "modeling", 1)
+        api.add_asset_version(v1)
+        api.add_asset(asset)
         assets = api.list_assets()
         self.assertEqual(len(assets), 1)
 

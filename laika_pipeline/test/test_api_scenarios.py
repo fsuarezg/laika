@@ -49,9 +49,7 @@ class TestAPIScenarios(unittest.TestCase):
         # Add assets
         asset1 = Asset("hero", "character")
         asset2 = Asset("villain", "character")
-        api.add_asset(asset1)
-        api.add_asset(asset2)
-
+        
         # Add versions
         v1 = AssetVersion(asset1.code, "modeling", 1, "active")
         v2 = AssetVersion(asset1.code, "texturing", 1, "active")
@@ -60,6 +58,8 @@ class TestAPIScenarios(unittest.TestCase):
         api.add_asset_version(v1)
         api.add_asset_version(v2)
         api.add_asset_version(v3)
+        api.add_asset(asset1)
+        api.add_asset(asset2)
 
         # Verify
         self.assertEqual(len(api.list_assets()),
@@ -75,6 +75,9 @@ class TestAPIScenarios(unittest.TestCase):
 
         asset1 = Asset("hero", "character")
         asset2 = Asset("hero", "character")
+
+        v1 = AssetVersion(asset1.code, "modeling", 1)
+        api.add_asset_version(v1)
 
         result1 = api.add_asset(asset1)
         result2 = api.add_asset(asset2)
@@ -94,6 +97,11 @@ class TestAPIScenarios(unittest.TestCase):
             Asset("sword", "prop"),
             Asset("castle", "environment")
         ]
+
+        # Add versions for each asset
+        for asset in assets_to_add:
+            version = AssetVersion(asset.code, "modeling", 1, "active")
+            api.add_asset_version(version)
 
         for asset in assets_to_add:
             api.add_asset(asset)
