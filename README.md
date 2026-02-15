@@ -2,6 +2,10 @@
 
 ## Code structure of laika_pipeline
 
+## Architecture
+
+![image](docs/architecture.png)
+
 ### Folders
 - **db**: Contains the persistent storage layer of the project. 
 - **example**: Contains code example on how to use the API.
@@ -30,7 +34,17 @@ Three script commands are defined in the toml file:
 - `potry run run_demo`: runs a very simple project demo.
 - `poetry run_api_example`: runs some example of api usage defined.
 
+## CLI
 
-Improvements:
+TODO explain how to use CLI
+
+## Improvements
+
 - Instead of lists us dictionaries to store asset and asset versions in
 the project class
+
+## Notes
+
+- I admitedly spent more than 6 hours on this.
+- There are 'NOTE' codetags that explain my thinking sometimes.
+
