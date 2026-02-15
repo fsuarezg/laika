@@ -54,9 +54,7 @@ class Project():
                         name=asset_entry['name'],
                         asset_type=asset_entry['type']
                     )
-            validation_result = self.add_asset(asset)
-            if not validation_result.success:
-                self.validation_errors.append(validation_result.error_message)
+
             asset_version = AssetVersion(
                         asset=asset.code,
                         department=entry['department'],
@@ -64,6 +62,9 @@ class Project():
                         status=entry['status']
                     )
             validation_result = self.add_asset_version(asset_version)
+            if not validation_result.success:
+                self.validation_errors.append(validation_result.error_message)
+            validation_result = self.add_asset(asset)
             if not validation_result.success:
                 self.validation_errors.append(validation_result.error_message)
 
