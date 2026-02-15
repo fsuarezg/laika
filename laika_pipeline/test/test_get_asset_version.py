@@ -13,7 +13,7 @@ class TestGetAssetVersion(unittest.TestCase):
         """Set up test fixtures."""
         api.initialize()
         self.asset = Asset("hero", "character")
-        
+
         v1 = AssetVersion(self.asset.code, "modeling", 1, "active")
         v2 = AssetVersion(self.asset.code, "modeling", 2, "active")
         api.add_asset_version(v1)

@@ -49,7 +49,7 @@ class TestAPIScenarios(unittest.TestCase):
         # Add assets
         asset1 = Asset("hero", "character")
         asset2 = Asset("villain", "character")
-        
+
         # Add versions
         v1 = AssetVersion(asset1.code, "modeling", 1, "active")
         v2 = AssetVersion(asset1.code, "texturing", 1, "active")
