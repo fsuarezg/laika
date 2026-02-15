@@ -19,11 +19,13 @@ class AssetVersionValidator:
             project: 'Project'
     ) -> OperationResult:
         """
-        Ensure that the version numbers for the given asset increase linearly.
+        Ensure that the version numbers for the given asset and department
+        increase linearly.
 
         Rules:
-        - Version numbers must start at 1.
+        - Version numbers must start at 1 (per department).
         - No gaps are allowed (e.g., cannot add v3 if v2 is missing).
+        - Versions are tracked independently per department.
 
         Args:
             asset_version (AssetVersion): The version being added.
@@ -34,19 +36,22 @@ class AssetVersionValidator:
                              message.
         """
 
-        # Collect all existing versions for this asset
+        # Collect all existing versions for this asset AND department
         existing_versions = sorted(
             av.version for av in project.asset_versions
             if av.asset == asset_version.asset
+            and av.department == asset_version.department
         )
 
-        # If no versions exist yet, the first version must be 1
+        # If no versions exist yet for this department, the first version must
+        # be 1
         if not existing_versions:
             if asset_version.version != 1:
                 return OperationResult(
                     success=False,
                     error_message=(
-                        f"Asset '{asset_version.asset}' has no versions yet. "
+                        f"Asset '{asset_version.asset}' has no versions yet "
+                        f"in department '{asset_version.department}'. "
                         f"The first version must be 1, not "
                         f"{asset_version.version}."
                     )
@@ -61,7 +66,8 @@ class AssetVersionValidator:
                 success=False,
                 error_message=(
                     f"Invalid version sequence for asset "
-                    f"'{asset_version.asset}'. "
+                    f"'{asset_version.asset}' in department "
+                    f"'{asset_version.department}'. "
                     f"Expected version {expected_next}, got "
                     f"{asset_version.version}."
                 )
