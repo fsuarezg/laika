@@ -6,6 +6,7 @@ A mini animation pipeline asset validation and registration service built as a P
 
 - [Quick Start](#quick-start)
 - [Installation](#installation)
+- [Docker Setup](#docker-setup)
 - [Data Model](#data-model)
 - [Architecture](#architecture)
 - [Project Structure](#project-structure)
@@ -35,7 +36,7 @@ poetry run run_api_example
 
 ### Requirements
 
-- Python 3.9+
+- Python 3.10+
 - Poetry (dependency manager)
 
 ### Setup
@@ -52,6 +53,52 @@ python -m laika_pipeline --help
 ```
 
 This generates a `poetry.lock` file ensuring reproducible builds.
+
+## Docker Setup
+
+### Requirements
+
+- Docker
+- Docker Compose (optional, for development)
+
+Add docker to your environment PATH variable:
+`C:\Program Files\Docker\Docker\resources\bin`
+
+### Building the Docker Image
+
+```bash
+# Build the image
+docker build -t laika-pipeline .
+
+# Run the demo
+docker run --rm -it laika-pipeline poetry run run_demo
+
+# Run tests
+docker run --rm -it laika-pipeline poetry run run_tests
+
+# Run API example
+docker run --rm -it laika-pipeline poetry run run_api_example
+```
+
+### Development with Docker Compose
+
+For development with live code reloading:
+
+```bash
+# Start the service (runs demo by default)
+docker-compose up
+
+# Run tests
+docker-compose run --rm laika poetry run run_tests
+
+# Run API example
+docker-compose run --rm laika poetry run run_api_example
+
+# Access the container shell
+docker-compose run --rm laika bash
+```
+
+The `docker-compose.yml` mounts the source code as a volume, allowing you to edit files locally while running in the container. Database files are persisted in a named volume.
 
 ## Data Model
 

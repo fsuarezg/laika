@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  laika:
+    build: .
+    volumes:
+      # Mount the source code for development
+      - .:/app
+      # Mount a volume for SQLite database persistence
+      - laika_data:/app/data
+    working_dir: /app
+    command: ["poetry", "run", "run_demo"]
+    # Override command for different tasks:
+    # command: ["poetry", "run", "run_tests"]
+    # command: ["poetry", "run", "run_api_example"]
+
+volumes:
+  laika_data:
